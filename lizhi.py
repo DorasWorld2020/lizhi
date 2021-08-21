@@ -16,6 +16,8 @@ import argparse
 import requests
 import re
 import time
+from datetime import datetime
+import  pytz
 import subprocess
 import pandas as pd
 from requests.adapters import HTTPAdapter
@@ -64,7 +66,7 @@ while True:
     url=f"https://appweb.lizhi.fm/live/comments?liveId={liveid}&start={msg_time}&count=50"
     # print(url)
     # res = requests.get(url,headers=header)
-    res = session.get(url, headers = header, timeout = 4)
+    res = session.get(url, headers = header, timeout = 1)
     try:
         # print('starting reading comments')
         json_res = res.json()
@@ -78,62 +80,102 @@ while True:
     msg_count = len(json_res['comments']['list'])
 
     # 整点报时
-    local_dt = time.strftime("%Y-%m-%d %H:%M:%S")
-    daily_msg = '多肉在忙事情，现在由小管家我接管多肉的世界，我可以讲粤语、韩语和日语的啦，详细操作记得看直播间的公告。'
+    amsterdam_dt = datetime.now()
+    tz = pytz.timezone('Asia/Shanghai')
+    beijing_tz = datetime.now(tz)
+    beijing_dt = beijing_tz.strftime("%Y-%m-%d %H:%M:%S")
+    daily_msg = \
+        '多肉出没的时间是北京时间凌晨四点到凌晨五点，所以现在由小管家我接管多肉的世界，我可以讲粤语、韩语和日语的啦，详细操作可以看直播间的公告。今日小管家想和大家分享一首法国诗人保尔，艾吕雅的诗歌，名字叫凤凰。我是你路上最后一个过客，最后一个春天，最后一场雪，最后一次求生的战争，看，我们比以往都低，也比以往都高，我们的火堆里什么都有，有松果、有葡萄枝，还有赛过流水的鲜花，有泥浆也有露滴，我们脚下是火，火上也是火，昆虫、雀鸟和人，都将从我们脚下飞起，飞着的也即将降落，天空清朗，大地阴沉，但是黑烟升上苍穹，天空失去一切光亮，火焰留在人间，火焰是心灵的云彩，火焰是血液全部的支流，它唱着我们的曲调，它驱除我们冬天的水汽，黑夜可厌的忧愁燃烧起来了，灰烬变成了欢乐美丽的花朵，我们永远背向西方，一切都披上了曙光的色彩，'
+    # daily_msg = ' '
     while True:
-        if local_dt[14:16] == '00':
-            if local_dt[17:19] == '00':
-                print('整点报时' + local_dt)
-                welcome_msg = f"小管家滴滴报时，宜家系多肉时间 {local_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
-                cmd = ["say", "-v", "Sin-ji", "-r", "180", welcome_msg]
-                subprocess.call(cmd)
-                welcome_msg = f"小管家滴滴报时，现在是多肉时间 {local_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
+        if beijing_dt[14:16] == '00':
+            if beijing_dt[17:19] == '00':
+                print('整点报时' + beijing_dt)
+                welcome_msg = f"小管家滴滴报时，现在是北京时间 {beijing_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
                 cmd = ["say", "-v", "Mei-Jia", "-r", "190", welcome_msg]
+                subprocess.call(cmd)
+                welcome_msg = f"小管家滴滴报时，宜家系北京时间 {beijing_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
+                cmd = ["say", "-v", "Sin-ji", "-r", "180", welcome_msg]
                 subprocess.call(cmd)
                 break
-            if local_dt[17:19] == '01':
-                print('整点报时' + local_dt)
-                welcome_msg = f"小管家滴滴报时，宜家系多肉时间 {local_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
-                cmd = ["say", "-v", "Sin-ji", "-r", "180", welcome_msg]
-                subprocess.call(cmd)
-                welcome_msg = f"小管家滴滴报时，现在是多肉时间 {local_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
+            if beijing_dt[17:19] == '01':
+                print('整点报时' + beijing_dt)
+                welcome_msg = f"小管家滴滴报时，现在是北京时间 {beijing_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
                 cmd = ["say", "-v", "Mei-Jia", "-r", "190", welcome_msg]
+                subprocess.call(cmd)
+                welcome_msg = f"小管家滴滴报时，宜家系北京时间 {beijing_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
+                cmd = ["say", "-v", "Sin-ji", "-r", "180", welcome_msg]
                 subprocess.call(cmd)
                 break
-            if local_dt[17:19] == '02':
-                print('整点报时' + local_dt)
-                welcome_msg = f"小管家滴滴报时，宜家系多肉时间 {local_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
-                cmd = ["say", "-v", "Sin-ji", "-r", "180", welcome_msg]
-                subprocess.call(cmd)
-                welcome_msg = f"小管家滴滴报时，现在是多肉时间 {local_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
+            if beijing_dt[17:19] == '02':
+                print('整点报时' + beijing_dt)
+                welcome_msg = f"小管家滴滴报时，现在是北京时间 {beijing_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
                 cmd = ["say", "-v", "Mei-Jia", "-r", "190", welcome_msg]
+                subprocess.call(cmd)
+                welcome_msg = f"小管家滴滴报时，宜家系北京时间 {beijing_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
+                cmd = ["say", "-v", "Sin-ji", "-r", "180", welcome_msg]
                 subprocess.call(cmd)
                 break
-            if local_dt[17:19] == '03':
-                print('整点报时' + local_dt)
-                welcome_msg = f"小管家滴滴报时，宜家系多肉时间 {local_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
-                cmd = ["say", "-v", "Sin-ji", "-r", "180", welcome_msg]
-                subprocess.call(cmd)
-                welcome_msg = f"小管家滴滴报时，现在是多肉时间 {local_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
+            if beijing_dt[17:19] == '03':
+                print('整点报时' + beijing_dt)
+                welcome_msg = f"小管家滴滴报时，现在是北京时间 {beijing_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
                 cmd = ["say", "-v", "Mei-Jia", "-r", "190", welcome_msg]
+                subprocess.call(cmd)
+                welcome_msg = f"小管家滴滴报时，宜家系北京时间 {beijing_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
+                cmd = ["say", "-v", "Sin-ji", "-r", "180", welcome_msg]
                 subprocess.call(cmd)
                 break
-            if local_dt[17:19] == '04':
-                print('整点报时' + local_dt)
-                welcome_msg = f"小管家滴滴报时，宜家系多肉时间 {local_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
-                cmd = ["say", "-v", "Sin-ji", "-r", "180", welcome_msg]
-                subprocess.call(cmd)
-                welcome_msg = f"小管家滴滴报时，现在是多肉时间 {local_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
+            if beijing_dt[17:19] == '04':
+                print('整点报时' + beijing_dt)
+                welcome_msg = f"小管家滴滴报时，现在是北京时间 {beijing_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
                 cmd = ["say", "-v", "Mei-Jia", "-r", "190", welcome_msg]
+                subprocess.call(cmd)
+                welcome_msg = f"小管家滴滴报时，宜家系北京时间 {beijing_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
+                cmd = ["say", "-v", "Sin-ji", "-r", "180", welcome_msg]
                 subprocess.call(cmd)
                 break
-            if local_dt[17:19] == '05':
-                print('整点报时' + local_dt)
-                welcome_msg = f"小管家滴滴报时，宜家系多肉时间 {local_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
+            if beijing_dt[17:19] == '05':
+                print('整点报时' + beijing_dt)
+                welcome_msg = f"小管家滴滴报时，现在是北京时间 {beijing_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
+                cmd = ["say", "-v", "Mei-Jia", "-r", "190", welcome_msg]
+                subprocess.call(cmd)
+                welcome_msg = f"小管家滴滴报时，宜家系北京时间 {beijing_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
                 cmd = ["say", "-v", "Sin-ji", "-r", "180", welcome_msg]
                 subprocess.call(cmd)
-                welcome_msg = f"小管家滴滴报时，现在是多肉时间 {local_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
+                break
+            if beijing_dt[17:19] == '06':
+                print('整点报时' + beijing_dt)
+                welcome_msg = f"小管家滴滴报时，现在是北京时间 {beijing_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
                 cmd = ["say", "-v", "Mei-Jia", "-r", "190", welcome_msg]
+                subprocess.call(cmd)
+                welcome_msg = f"小管家滴滴报时，宜家系北京时间 {beijing_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
+                cmd = ["say", "-v", "Sin-ji", "-r", "180", welcome_msg]
+                subprocess.call(cmd)
+                break
+            if beijing_dt[17:19] == '07':
+                print('整点报时' + beijing_dt)
+                welcome_msg = f"小管家滴滴报时，现在是北京时间 {beijing_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
+                cmd = ["say", "-v", "Mei-Jia", "-r", "190", welcome_msg]
+                subprocess.call(cmd)
+                welcome_msg = f"小管家滴滴报时，宜家系北京时间 {beijing_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
+                cmd = ["say", "-v", "Sin-ji", "-r", "180", welcome_msg]
+                subprocess.call(cmd)
+                break
+            if beijing_dt[17:19] == '08':
+                welcome_msg = f"小管家滴滴报时，现在是北京时间 {beijing_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
+                cmd = ["say", "-v", "Mei-Jia", "-r", "190", welcome_msg]
+                subprocess.call(cmd)
+                welcome_msg = f"小管家滴滴报时，宜家系北京时间 {beijing_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
+                cmd = ["say", "-v", "Sin-ji", "-r", "180", welcome_msg]
+                subprocess.call(cmd)
+                break
+            if beijing_dt[17:19] == '09':
+                print('整点报时' + beijing_dt)
+                welcome_msg = f"小管家滴滴报时，现在是北京时间 {beijing_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
+                cmd = ["say", "-v", "Mei-Jia", "-r", "190", welcome_msg]
+                subprocess.call(cmd)
+                welcome_msg = f"小管家滴滴报时，宜家系北京时间 {beijing_dt} 秒，欢迎大家来到多肉的世界，{daily_msg}"
+                cmd = ["say", "-v", "Sin-ji", "-r", "180", welcome_msg]
                 subprocess.call(cmd)
                 break
             break
@@ -144,7 +186,7 @@ while True:
     # 播报弹幕数
     if args.count_only and msg_count > 0:
         speak_msg = f"你收到了 {msg_count} 条消息."
-        cmd = ["say", "-v", "Ting-Ting", "-r", "250", speak_msg]
+        cmd = ["say", "-v", "Mei-Jia", "-r", "250", speak_msg]
         subprocess.call(cmd)
 
     # 播报弹幕内容
@@ -188,6 +230,8 @@ while True:
                 cmd = ["say", "-v", "Sin-ji", "-r", "180", welcome_msg]
                 subprocess.call(cmd)
                 cmd = ["say", "-v", "Mei-Jia", "-r", "190", custom_msg]
+                subprocess.call(cmd)
+                cmd = ["say", "-v", "Sin-ji", "-r", "190", custom_msg]
                 subprocess.call(cmd)
                 break
 
