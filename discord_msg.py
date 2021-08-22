@@ -8,6 +8,7 @@
 import requests
 import time
 from requests.adapters import HTTPAdapter
+from langdetect import detect
 
 dc_url = 'https://discord.com/api/v9/channels/876602173516046347/messages'
 header = {
@@ -45,7 +46,7 @@ while True:
             print('不播报此条消息: ' + lizhi_msg)
             break
         else:
-            print(lizhi_msg)
+            # print(lizhi_msg)
             payload = {
                 'content': lizhi_msg
             }
