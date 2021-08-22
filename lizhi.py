@@ -21,6 +21,7 @@ import  pytz
 import subprocess
 import pandas as pd
 from requests.adapters import HTTPAdapter
+from langdetect import detect
 # from requests.packages.urllib3.util.retry import Retry
 
 
@@ -85,7 +86,7 @@ while True:
     beijing_tz = datetime.now(tz)
     beijing_dt = beijing_tz.strftime("%Y-%m-%d %H:%M:%S")
     daily_msg = \
-        '多肉出没的时间是北京时间凌晨四点到凌晨五点，所以现在由小管家我接管多肉的世界，我可以讲粤语、韩语和日语的啦，详细操作可以看直播间的公告。今日小管家想和大家分享一首法国诗人保尔，艾吕雅的诗歌，名字叫凤凰。我是你路上最后一个过客，最后一个春天，最后一场雪，最后一次求生的战争，看，我们比以往都低，也比以往都高，我们的火堆里什么都有，有松果、有葡萄枝，还有赛过流水的鲜花，有泥浆也有露滴，我们脚下是火，火上也是火，昆虫、雀鸟和人，都将从我们脚下飞起，飞着的也即将降落，天空清朗，大地阴沉，但是黑烟升上苍穹，天空失去一切光亮，火焰留在人间，火焰是心灵的云彩，火焰是血液全部的支流，它唱着我们的曲调，它驱除我们冬天的水汽，黑夜可厌的忧愁燃烧起来了，灰烬变成了欢乐美丽的花朵，我们永远背向西方，一切都披上了曙光的色彩，'
+        '多肉出没的时间是北京时间凌晨四点到凌晨五点，所以现在由小管家我接管多肉的世界，我可以讲粤语、韩语和日语的啦，详细操作可以看直播间的公告。'
     # daily_msg = ' '
     while True:
         if beijing_dt[14:16] == '00':
@@ -208,6 +209,7 @@ while True:
 
             # 定义弹幕消息的播报内容
             speak_msg = f"{user_name} 说: {comment}"
+            speak_username = f"{user_name} 说:"
 
             # 欢迎多肉号成员回家
             if user_name in nickname.values() and speak_msg.__contains__('欢迎'):
@@ -264,104 +266,99 @@ while True:
                 subprocess.call(cmd)
                 break
 
-            # 用不同的语言（方言）播放对应的弹幕消息
-            if speak_msg.__contains__('!cantonese'):
-                speak_msg = speak_msg.replace("!cantonese", " ")
+
+            # 检测评论的语言，根据检测结果使用不同语言播报
+            try:
+                comment_lang = detect(comment)
+            except Exception as e:
+                print(f"No features in text: {e}")
+                comment_lang = 'zh-cn'
+                continue
+            if comment_lang == 'zh-cn':
+                print(comment_lang + ':' + comment)
+                speak_comment = f"{comment}"
                 time_msg = time.asctime()
-                print(time_msg,speak_msg)
+                print(time_msg, speak_msg)
+                cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
+                subprocess.call(cmd)
+                cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_comment]
+                subprocess.call(cmd)
+            elif comment_lang == 'ja':
+                print(comment_lang + ':' + comment)
+                speak_comment = f"{comment}"
+                time_msg = time.asctime()
+                print(time_msg, speak_msg)
+                cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
+                subprocess.call(cmd)
+                cmd = ["say", "-v", "Kyoko", "-r", "180", speak_comment]
+                subprocess.call(cmd)
+            elif comment_lang == 'ko':
+                print(comment_lang + ':' + comment)
+                speak_comment = f"{comment}"
+                time_msg = time.asctime()
+                print(time_msg, speak_msg)
+                cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
+                subprocess.call(cmd)
+                cmd = ["say", "-v", "Yuna", "-r", "170", speak_comment]
+                subprocess.call(cmd)
+            elif comment_lang == 'en':
+                print(comment_lang + ':' + comment)
+                speak_comment = f"{comment}"
+                time_msg = time.asctime()
+                print(time_msg, speak_msg)
+                cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
+                subprocess.call(cmd)
+                cmd = ["say", "-v", "Victoria", "-r", "180", speak_comment]
+                subprocess.call(cmd)
+            elif comment_lang == 'nl':
+                print(comment_lang + ':' + comment)
+                speak_comment = f"{comment}"
+                time_msg = time.asctime()
+                print(time_msg, speak_msg)
+                cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
+                subprocess.call(cmd)
+                cmd = ["say", "-v", "Xander", "-r", "180", speak_comment]
+                subprocess.call(cmd)
+            elif comment_lang == 'fr':
+                print(comment_lang + ':' + comment)
+                speak_comment = f"{comment}"
+                time_msg = time.asctime()
+                print(time_msg, speak_msg)
+                cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
+                subprocess.call(cmd)
+                cmd = ["say", "-v", "Thomas", "-r", "180", speak_comment]
+                subprocess.call(cmd)
+            elif comment_lang == 'es':
+                print(comment_lang + ':' + comment)
+                speak_comment = f"{comment}"
+                time_msg = time.asctime()
+                print(time_msg, speak_msg)
+                cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
+                subprocess.call(cmd)
+                cmd = ["say", "-v", "Monica", "-r", "180", speak_comment]
+                subprocess.call(cmd)
+            elif comment_lang == 'de':
+                print(comment_lang + ':' + comment)
+                speak_comment = f"{comment}"
+                time_msg = time.asctime()
+                print(time_msg, speak_msg)
+                cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
+                subprocess.call(cmd)
+                cmd = ["say", "-v", "Anna", "-r", "180", speak_comment]
+                subprocess.call(cmd)
+            elif comment.__contains__('!cantonese'):
+                speak_comment = comment.replace("!cantonese", " ")
+                time_msg = time.asctime()
+                print(time_msg, speak_msg)
                 cmd = ["say", "-v", "Sin-ji", "-r", "180", speak_msg]
                 subprocess.call(cmd)
-                # auto_msg = f"你好哇。咸鱼多肉宜家唔得闲！我系多肉既小管家，你有咩事可以同我讲，我帮你转达。如果唔想听哩一条自动回复，可以睇下公告既命令说明。得闲再一起玩啦！"
-                # time.sleep(2)
-                # cmd = ["say", "-v", "Sin-ji", "-r", "200", auto_msg]
-                # subprocess.call(cmd)
-                break
-
-            if speak_msg.__contains__('!japanese'):
-                speak_msg = f"{user_name} 说: {comment}"
-                speak_msg = speak_msg.replace("!japanese", " ")
-                time_msg = time.asctime()
-                print(time_msg,speak_msg)
-                cmd = ["say", "-v", "Kyoko", "-r", "200", speak_msg]
-                subprocess.call(cmd)
-                break
-
-            if speak_msg.__contains__('!english'):
-                speak_msg = f"{comment}"
-                speak_msg = speak_msg.replace("!english", " ")
-                time_msg = time.asctime()
-                print(time_msg,speak_msg)
-                cmd = ["say", "-v", "Victoria", "-r", "185", speak_msg]
-                subprocess.call(cmd)
-                break
-
-            if speak_msg.__contains__('!korean'):
-                speak_msg = speak_msg.replace("!korean", " ")
-                time_msg = time.asctime()
-                print(time_msg,speak_msg)
-                cmd = ["say", "-v", "Yuna", "-r", "180", speak_msg]
-                subprocess.call(cmd)
-                break
-
-            if speak_msg.__contains__('!dutch'):
-                speak_msg = speak_msg.replace("!dutch", " ")
-                time_msg = time.asctime()
-                print(time_msg,speak_msg)
-                cmd = ["say", "-v", "Xander", "-r", "200", speak_msg]
-                subprocess.call(cmd)
-                break
-
-            if speak_msg.__contains__('!german'):
-                speak_msg = speak_msg.replace("!german", " ")
-                time_msg = time.asctime()
-                print(time_msg,speak_msg)
-                cmd = ["say", "-v", "Anna", "-r", "190", speak_msg]
-                subprocess.call(cmd)
-                break
-
-            if speak_msg.__contains__('!french'):
-                speak_msg = speak_msg.replace("!french", " ")
-                time_msg = time.asctime()
-                print(time_msg,speak_msg)
-                cmd = ["say", "-v", "Thomas", "-r", "185", speak_msg]
-                subprocess.call(cmd)
-                break
-
-            if speak_msg.__contains__('!spanish'):
-                speak_msg = speak_msg.replace("!spanish", " ")
-                time_msg = time.asctime()
-                print(time_msg,speak_msg)
-                cmd = ["say", "-v", "Monica", "-r", "190", speak_msg]
-                subprocess.call(cmd)
-                break
-
-            if speak_msg.__contains__('!cnoff'):
-                speak_msg = speak_msg.replace("!cnoff", " ")
-                time_msg = time.asctime()
-                print(time_msg,speak_msg)
-                cmd = ["say", "-v", "Mei-Jia", "-r", "195", speak_msg]
-                subprocess.call(cmd)
-                break
-
-            if speak_msg.__contains__('!hkoff'):
-                speak_msg = speak_msg.replace("!hkoff", " ")
-                time_msg = time.asctime()
-                print(time_msg,speak_msg)
-                cmd = ["say", "-v", "Sin-ji", "-r", "180", speak_msg]
-                subprocess.call(cmd)
-                break
-            if speak_msg.__contains__('!readoff'):
-                speak_msg = speak_msg.replace("!readoff", " ")
-                time_msg = time.asctime()
-                print(time_msg,speak_msg)
-                break
-
             else:
+                print('do not support this language now, use default language Chinese!')
+                print(comment_lang + ':' + comment)
+                speak_comment = f"{comment}"
                 time_msg = time.asctime()
-                print(time_msg,speak_msg)
-                cmd = ["say", "-v", "Mei-Jia", "-r", "200", speak_msg]
+                print(time_msg, speak_msg)
+                cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
                 subprocess.call(cmd)
-                # auto_msg = f"你好哇，咸鱼多肉在忙其他事情啦！我是勤快的小管家，有事可以和我讲。虽然现在我笨笨的，可是我在很努力学习啦！不要嫌弃我诶。希望咸鱼多肉早点翻身，让我多学一点技能，和大家愉快玩耍。友情提示，如果不想听到小管家的自动回复，可以查看公告的操作命令哦"
-                # time.sleep(2)
-                # cmd = ["say", "-v", "Mei-Jia", "-r", "200", auto_msg]
-                # subprocess.call(cmd)
+                cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_comment]
+                subprocess.call(cmd)
