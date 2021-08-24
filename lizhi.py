@@ -88,8 +88,6 @@ while True:
                 subprocess.call(cmd)
                 break
         break
-    else:
-        pass
 
     # 从服务器返回的json对象获取每一条弹幕消息，并按照不同的规则“播报”弹幕消息
     for msg in json_res['comments']['list']:
@@ -166,95 +164,105 @@ while True:
             break
 
         # 检测评论的语言，根据检测结果使用不同语言播报
-        for character in comment:
-            # 首先判断文本中是否包含中文字符，如果包含，则再判断是否用粤语播报，否则进行语言判断
-            if u'\u4e00' <= character <= u'\u9fff':
-                speak_comment = f"{comment}"
-                time_msg = time.asctime()
-                print(time_msg, speak_msg)
-                cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
-                subprocess.call(cmd)
-                cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_comment]
-                subprocess.call(cmd)
+        # 先判断是否用粤语播报：
+            # 再判断文本中是否包含中文字符
+                # 最后进行语言判断
+        if speak_msg.__contains__('!cantonese'):
+            speak_msg = speak_msg.replace("!cantonese", " ")
+            time_msg = time.asctime()
+            print(time_msg, speak_msg)
+            cmd = ["say", "-v", "Sin-ji", "-r", "180", speak_msg]
+            subprocess.call(cmd)
+        else:
+            for character in comment:
+                # 首先判断文本中是否包含中文字符，否则进行语言判断
+                if u'\u4e00' <= character <= u'\u9fff':
+                    speak_comment = f"{comment}"
+                    time_msg = time.asctime()
+                    print(time_msg, speak_msg)
+                    cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
+                    subprocess.call(cmd)
+                    cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_comment]
+                    subprocess.call(cmd)
+                    break
+                # 进行语言判断
+                try:
+                    comment_lang = detect(comment)
+                except Exception as e:
+                    print(f"No features in text: {e}")
+                    comment_lang = 'zh-cn'
+                    continue
+                if comment_lang == 'ja':
+                    print(comment_lang + ':' + comment)
+                    speak_comment = f"{comment}"
+                    time_msg = time.asctime()
+                    print(time_msg, speak_msg)
+                    cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
+                    subprocess.call(cmd)
+                    cmd = ["say", "-v", "Kyoko", "-r", "180", speak_comment]
+                    subprocess.call(cmd)
+                elif comment_lang == 'ko':
+                    print(comment_lang + ':' + comment)
+                    speak_comment = f"{comment}"
+                    time_msg = time.asctime()
+                    print(time_msg, speak_msg)
+                    cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
+                    subprocess.call(cmd)
+                    cmd = ["say", "-v", "Yuna", "-r", "160", speak_comment]
+                    subprocess.call(cmd)
+                elif comment_lang == 'en':
+                    print(comment_lang + ':' + comment)
+                    speak_comment = f"{comment}"
+                    time_msg = time.asctime()
+                    print(time_msg, speak_msg)
+                    cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
+                    subprocess.call(cmd)
+                    cmd = ["say", "-v", "Victoria", "-r", "180", speak_comment]
+                    subprocess.call(cmd)
+                elif comment_lang == 'nl':
+                    print(comment_lang + ':' + comment)
+                    speak_comment = f"{comment}"
+                    time_msg = time.asctime()
+                    print(time_msg, speak_msg)
+                    cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
+                    subprocess.call(cmd)
+                    cmd = ["say", "-v", "Xander", "-r", "180", speak_comment]
+                    subprocess.call(cmd)
+                elif comment_lang == 'fr':
+                    print(comment_lang + ':' + comment)
+                    speak_comment = f"{comment}"
+                    time_msg = time.asctime()
+                    print(time_msg, speak_msg)
+                    cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
+                    subprocess.call(cmd)
+                    cmd = ["say", "-v", "Thomas", "-r", "180", speak_comment]
+                    subprocess.call(cmd)
+                elif comment_lang == 'es':
+                    print(comment_lang + ':' + comment)
+                    speak_comment = f"{comment}"
+                    time_msg = time.asctime()
+                    print(time_msg, speak_msg)
+                    cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
+                    subprocess.call(cmd)
+                    cmd = ["say", "-v", "Monica", "-r", "180", speak_comment]
+                    subprocess.call(cmd)
+                elif comment_lang == 'de':
+                    print(comment_lang + ':' + comment)
+                    speak_comment = f"{comment}"
+                    time_msg = time.asctime()
+                    print(time_msg, speak_msg)
+                    cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
+                    subprocess.call(cmd)
+                    cmd = ["say", "-v", "Anna", "-r", "180", speak_comment]
+                    subprocess.call(cmd)
+                else:
+                    print('do not support this language now, use default language Chinese!')
+                    print(comment_lang + ':' + comment)
+                    speak_comment = f"{comment}"
+                    time_msg = time.asctime()
+                    print(time_msg, speak_msg)
+                    cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
+                    subprocess.call(cmd)
+                    cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_comment]
+                    subprocess.call(cmd)
                 break
-            # 进行语言判断
-            try:
-                comment_lang = detect(comment)
-            except Exception as e:
-                print(f"No features in text: {e}")
-                comment_lang = 'zh-cn'
-                continue
-            if comment_lang == 'ja':
-                print(comment_lang + ':' + comment)
-                speak_comment = f"{comment}"
-                time_msg = time.asctime()
-                print(time_msg, speak_msg)
-                cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
-                subprocess.call(cmd)
-                cmd = ["say", "-v", "Kyoko", "-r", "180", speak_comment]
-                subprocess.call(cmd)
-            elif comment_lang == 'ko':
-                print(comment_lang + ':' + comment)
-                speak_comment = f"{comment}"
-                time_msg = time.asctime()
-                print(time_msg, speak_msg)
-                cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
-                subprocess.call(cmd)
-                cmd = ["say", "-v", "Yuna", "-r", "160", speak_comment]
-                subprocess.call(cmd)
-            elif comment_lang == 'en':
-                print(comment_lang + ':' + comment)
-                speak_comment = f"{comment}"
-                time_msg = time.asctime()
-                print(time_msg, speak_msg)
-                cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
-                subprocess.call(cmd)
-                cmd = ["say", "-v", "Victoria", "-r", "180", speak_comment]
-                subprocess.call(cmd)
-            elif comment_lang == 'nl':
-                print(comment_lang + ':' + comment)
-                speak_comment = f"{comment}"
-                time_msg = time.asctime()
-                print(time_msg, speak_msg)
-                cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
-                subprocess.call(cmd)
-                cmd = ["say", "-v", "Xander", "-r", "180", speak_comment]
-                subprocess.call(cmd)
-            elif comment_lang == 'fr':
-                print(comment_lang + ':' + comment)
-                speak_comment = f"{comment}"
-                time_msg = time.asctime()
-                print(time_msg, speak_msg)
-                cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
-                subprocess.call(cmd)
-                cmd = ["say", "-v", "Thomas", "-r", "180", speak_comment]
-                subprocess.call(cmd)
-            elif comment_lang == 'es':
-                print(comment_lang + ':' + comment)
-                speak_comment = f"{comment}"
-                time_msg = time.asctime()
-                print(time_msg, speak_msg)
-                cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
-                subprocess.call(cmd)
-                cmd = ["say", "-v", "Monica", "-r", "180", speak_comment]
-                subprocess.call(cmd)
-            elif comment_lang == 'de':
-                print(comment_lang + ':' + comment)
-                speak_comment = f"{comment}"
-                time_msg = time.asctime()
-                print(time_msg, speak_msg)
-                cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
-                subprocess.call(cmd)
-                cmd = ["say", "-v", "Anna", "-r", "180", speak_comment]
-                subprocess.call(cmd)
-            else:
-                print('do not support this language now, use default language Chinese!')
-                print(comment_lang + ':' + comment)
-                speak_comment = f"{comment}"
-                time_msg = time.asctime()
-                print(time_msg, speak_msg)
-                cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
-                subprocess.call(cmd)
-                cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_comment]
-                subprocess.call(cmd)
-            break
