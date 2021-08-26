@@ -65,8 +65,8 @@ while True:
         continue
 
     msg_time = json_res['comments']['end']
-    daily_msg = \
-        '多肉出没的时间是北京时间凌晨四点到凌晨五点，所以现在由小管家我接管多肉的世界，小管家可以识别中文、英文、韩文、日文、德文、法文、西班牙文和荷兰文，并语音播报消息。如果想听粤语播报的消息，可以查看直播间公告栏的操作方法哦'
+    # daily_msg = '多肉出没的时间是北京时间凌晨四点到凌晨五点，所以现在由小管家我接管多肉的世界，小管家可以识别中文、英文、韩文、日文、德文、法文、西班牙文和荷兰文，并语音播报消息。如果想听粤语播报的消息，可以查看直播间公告栏的操作方法哦'
+    daily_msg = ' '
 
     # 整点报时
     amsterdam_dt = datetime.now()
@@ -87,7 +87,6 @@ while True:
                 cmd = ["say", "-v", "Sin-ji", "-r", "180", welcome_msg]
                 subprocess.call(cmd)
                 break
-        break
 
     # 从服务器返回的json对象获取每一条弹幕消息，并按照不同的规则“播报”弹幕消息
     for msg in json_res['comments']['list']:
@@ -192,77 +191,17 @@ while True:
                     print(f"No features in text: {e}")
                     comment_lang = 'zh-cn'
                     continue
-                if comment_lang == 'ja':
-                    print(comment_lang + ':' + comment)
-                    speak_comment = f"{comment}"
-                    time_msg = time.asctime()
-                    print(time_msg, speak_msg)
-                    cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
-                    subprocess.call(cmd)
-                    cmd = ["say", "-v", "Kyoko", "-r", "180", speak_comment]
-                    subprocess.call(cmd)
-                elif comment_lang == 'ko':
-                    print(comment_lang + ':' + comment)
-                    speak_comment = f"{comment}"
-                    time_msg = time.asctime()
-                    print(time_msg, speak_msg)
-                    cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
-                    subprocess.call(cmd)
-                    cmd = ["say", "-v", "Yuna", "-r", "160", speak_comment]
-                    subprocess.call(cmd)
-                elif comment_lang == 'en':
-                    print(comment_lang + ':' + comment)
-                    speak_comment = f"{comment}"
-                    time_msg = time.asctime()
-                    print(time_msg, speak_msg)
-                    cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
-                    subprocess.call(cmd)
-                    cmd = ["say", "-v", "Victoria", "-r", "180", speak_comment]
-                    subprocess.call(cmd)
-                elif comment_lang == 'nl':
-                    print(comment_lang + ':' + comment)
-                    speak_comment = f"{comment}"
-                    time_msg = time.asctime()
-                    print(time_msg, speak_msg)
-                    cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
-                    subprocess.call(cmd)
-                    cmd = ["say", "-v", "Xander", "-r", "180", speak_comment]
-                    subprocess.call(cmd)
-                elif comment_lang == 'fr':
-                    print(comment_lang + ':' + comment)
-                    speak_comment = f"{comment}"
-                    time_msg = time.asctime()
-                    print(time_msg, speak_msg)
-                    cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
-                    subprocess.call(cmd)
-                    cmd = ["say", "-v", "Thomas", "-r", "180", speak_comment]
-                    subprocess.call(cmd)
-                elif comment_lang == 'es':
-                    print(comment_lang + ':' + comment)
-                    speak_comment = f"{comment}"
-                    time_msg = time.asctime()
-                    print(time_msg, speak_msg)
-                    cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
-                    subprocess.call(cmd)
-                    cmd = ["say", "-v", "Monica", "-r", "180", speak_comment]
-                    subprocess.call(cmd)
-                elif comment_lang == 'de':
-                    print(comment_lang + ':' + comment)
-                    speak_comment = f"{comment}"
-                    time_msg = time.asctime()
-                    print(time_msg, speak_msg)
-                    cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
-                    subprocess.call(cmd)
-                    cmd = ["say", "-v", "Anna", "-r", "180", speak_comment]
-                    subprocess.call(cmd)
-                else:
-                    print('do not support this language now, use default language Chinese!')
-                    print(comment_lang + ':' + comment)
-                    speak_comment = f"{comment}"
-                    time_msg = time.asctime()
-                    print(time_msg, speak_msg)
-                    cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
-                    subprocess.call(cmd)
-                    cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_comment]
-                    subprocess.call(cmd)
+
+                #  读取语言代码文件
+                lang_df = pd.read_csv('lang.csv', header=0, index_col=0)
+                time_msg = time.asctime()
+                speak_comment = f"{comment}"
+                print(comment_lang, time_msg, speak_msg)
+                # 获取播报员代码和播报速度
+                speaker = lang_df.loc[comment_lang]['speaker']
+                speed = lang_df.loc[comment_lang]['speed']
+                cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
+                subprocess.call(cmd)
+                cmd = ["say", "-v", str(speaker), "-r", str(speed), speak_comment]
+                subprocess.call(cmd)
                 break
