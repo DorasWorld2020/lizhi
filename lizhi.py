@@ -66,7 +66,7 @@ while True:
 
     msg_time = json_res['comments']['end']
     # daily_msg = '多肉出没的时间是北京时间凌晨四点到凌晨五点，所以现在由小管家我接管多肉的世界，小管家可以识别中文、英文、韩文、日文、德文、法文、西班牙文和荷兰文，并语音播报消息。如果想听粤语播报的消息，可以查看直播间公告栏的操作方法哦'
-    daily_msg = ' '
+    daily_msg = '喜欢小管家的话可以关注一下多肉肉哦'
 
     # 整点报时
     amsterdam_dt = datetime.now()
@@ -193,15 +193,21 @@ while True:
                     continue
 
                 #  读取语言代码文件
+
                 lang_df = pd.read_csv('lang.csv', header=0, index_col=0)
                 time_msg = time.asctime()
                 speak_comment = f"{comment}"
                 print(comment_lang, time_msg, speak_msg)
                 # 获取播报员代码和播报速度
-                speaker = lang_df.loc[comment_lang]['speaker']
-                speed = lang_df.loc[comment_lang]['speed']
-                cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
-                subprocess.call(cmd)
-                cmd = ["say", "-v", str(speaker), "-r", str(speed), speak_comment]
-                subprocess.call(cmd)
-                break
+                if comment_lang in lang_df.index:
+                    speaker = lang_df.loc[comment_lang]['speaker']
+                    speed = lang_df.loc[comment_lang]['speed']
+                    cmd = ["say", "-v", "Mei-Jia", "-r", "180", speak_username]
+                    subprocess.call(cmd)
+                    cmd = ["say", "-v", str(speaker), "-r", str(speed), speak_comment]
+                    subprocess.call(cmd)
+                    break
+                else:
+                    cmd = ["say", "-v", "Mei-Jia", "-r", "180", '很抱歉，小管家暂时不支持使用该语言播报公屏消息哦！']
+                    subprocess.call(cmd)
+                    break
